@@ -149,7 +149,9 @@ end
 prompt"You had #{play_h}, the Computer had #{comp_h}"
 
 break if winner_check(play_h, comp_h) == (7..8)
+
  # rubocop disable: AllCops
+ 
 prompt"Do you want to Play again? Yes or No"
 answer = gets.chomp
 break if answer.downcase.split.first('n')

@@ -1,11 +1,13 @@
-Deck = { 'Hearts' => ['K10', 'Q10', 'J10', '10', '9', '8', '7',
+require 'pry'
+
+DECK = { 'Hearts' => ['K10', 'Q10', 'J10', '10', '9', '8', '7',
         '6', '5', '3', '2', '1'], 'Spades' => ['K10', 'Q10', 'J10',
         '10', '9', '8', '7', '6', '5', '3', '2', '1'], 'Clubs' => 
         ['K10', 'Q10', 'J10', '10', '9', '8', '7', '6', '5', '3',
         '2', '1'], 'Diamond' => ['K10', 'Q10', 'J10', '10', '9', '8',
-        '7', '6', '5', '3', '2', '1'] }.Freeze
+        '7', '6', '5', '3', '2', '1'] }.freeze
 
-BLACKJACK = 21.Freeze
+BLACKJACK = 21.freeze
 
 public
 
@@ -13,80 +15,63 @@ def prompt(message)
   puts " => #{message}"
 end
 
-def deal(player)
-  suit = Deck.keys.sample
-  arr = Deck.values.sample
-  card = arr.sample
-  delete_from_deck(card, suit)
-  card = ace_check(card, player)
-  player << [suit, card]
-  Deck[suit].delete_if { | _ , value| value == card }
+def deal(player, str)
+  used_cards = []
+  loop do
+    suit = DECK.keys.sample
+    arr = DECK.values.sample
+    card = arr.sample
+    card = ace_check(card, str)
+    break if used_cards.flatten.include?(suit) &&
+             used_cards.flatten.include?(card)
+             player << [suit, card]
+             used_cards << [suit, card]
+  end
 end
 
 def player_ace(card,player)
-  prompt"You have an Ace"
+  prompt"You have an Ace"                   
   prompt"Is that an 11 or a 1?"
   answer = gets.chomp
     if answer == '1'
-      card = 1
+      return card = 1
     else
-      card = 11
-    end
+      return card = 11
+    end   
 end
 
 def ace_check(card, player)
-  if card == '1' && player == play_h
-    player_ace(card, player)
-  elsif card == '1'
+  if card == '1' && player == 'player'
+    return player_ace(card, player)      
+  elsif card == '1'                      
     if greater_than(11, add_hand(player))
-      card = 11
+      return card = 11
     else
-      card = 1
+      return card = 1
     end
   else
   return card
   end
 end
 
-def delete(arg)
-  arg == nil?
+def remove(array)
+  x = array.delete_if { |word| word == /["Hearts""Spades""Clubs""Diamond"]/ }
+  x.to_s.split('').delete_if { |letter| letter == /[KQJ]/ }
 end
 
-def delete_from_deck(suit, card)
-  Deck[suit].delete(card)
-end
-
- # rubocop disable: AllCops
- 
 def add_hand(array) 
-  array.flatten.delete_if { |word| word == "Hearts" || word == "Spades" ||
-  word == "Clubs" || word == "Diamond" }.map { |num| num.to_i }.inject 
-  { |num| num += }
+  new_array = array.flatten.remove(array).inject { |sum, num| sum + num }
+  return new_array
 end
-
- # rubocop enable: AllCops
  
 def winner_check(human, computer)
-x = 0
-y = 0
-case 
-  when (x == 4 && bigger(human, computer) && !Busted?(human)) ||
-    (Busted?(computer) && x == 4)
-    prompt "You are the Winner!"
-    return 8
-  when
-    (y == 4 && bigger(computer, human) && !Busted?(computer)) ||
-    (Busted?(human) && y == 4)
-    prompt "The Computer won that time."
-    return 7
+  case 
   when (bigger(human, computer) && !Busted?(human)) || Busted?(computer)
-    prompt "Player Won"
-    x += 1
+    return 8
   when (bigger(computer,human) && !Busted?(computer)) || Busted?(human)
-    prompt "Computer Won"
-    y += 1
+    return 7
   else
-    prompt "Everybody loses.  Ante Up "
+    return 6
   end
 end
 
@@ -98,62 +83,70 @@ end
 
 def Busted?(hand)
   if add_hand(hand) > BLACKJACK
-  return true
+    return true
   end
+  false
 end
 
 loop do
 
   prompt"Welcome to Black Jack!"
 
-play_h = []
-comp_h = []
+  play_h = []
+  comp_h = []
 
-deal(play_h)
-deal(play_h)
+  deal(play_h, 'player')
+  deal(play_h, 'player')
 
-prompt"You have #{play_h[0]} and #{play_h[1]}"
+  prompt"You have #{play_h[0]} and #{play_h[1]}"
 
-loop do
-break if Busted?(play_h)
-prompt"Stay or Hit?"
-answer = gets.chomp
-  case answer.downcase
+  loop do
+    break if Busted?(play_h)
+      prompt"Stay or Hit?"
+      answer = gets.chomp
+    case answer.downcase
     when 'hit'
-      deal(play_h)
+      deal(play_h, 'player')
     when 'stay'
       break
     else
       prompt"Pick either Stay or Hit"
     end
-prompt"You have #{play_h}"
-end
+  prompt"You have #{play_h}"
+  end
 
-deal(comp_h)
-deal(comp_h)
+  deal(comp_h, 'computer')
+  deal(comp_h, 'computer')
 
-prompt"Dealer has #{comp_h[0]} and #{comp_h[1]}"
+  prompt"Dealer has #{comp_h[0]} and #{comp_h[1]}"
 
-loop do
-case add_hand(comp_h)
-  when (0..16)
-    deal(comp_h)
-  when (17..21)
-    break
-  when (21..35)
-    prompt"Computer Busted"
-    break
-end
-end
-
-prompt"You had #{play_h}, the Computer had #{comp_h}"
-
-break if winner_check(play_h, comp_h) == (7..8)
-
- # rubocop disable: AllCops
+  loop do
+    break if add_hand(comp_h) > 15 || Busted?
+      deal(comp_h, 'computer')
+    end
+  
+  player_wins = 0
+  computer_wins = 0
+  
+  prompt"You had #{play_h}, the Computer had #{comp_h}"
+  case winner_check(play_h, comp_h)
+  when 8
+    prompt "You Won!"
+    player_wins + 1
+  when 7
+    prompt "The Computer Won"
+    computer_wins + 1
+  else 6
+    prompt "You Both Busted"
+  end
+  
+  break if player_wins == 5
+    prompt "You WON"
+  break if computer_wins == 5
+    prompt "Computer won this time"
  
-prompt"Do you want to Play again? Yes or No"
-answer = gets.chomp
-break if answer.downcase.split.first('n')
+  prompt"Do you want to Play again? Yes or No"
+  answer = gets.chomp
+  break if answer.downcase.start_with?('n')
 end
 prompt"Thanks For Playing"

@@ -1,11 +1,11 @@
 require 'pry'
 
-DECK = { 'Hearts' => ['K10', 'Q10', 'J10', '10', '9', '8', '7',
-        '6', '5', '3', '2', '1'], 'Spades' => ['K10', 'Q10', 'J10',
-        '10', '9', '8', '7', '6', '5', '3', '2', '1'], 'Clubs' => 
-        ['K10', 'Q10', 'J10', '10', '9', '8', '7', '6', '5', '3',
-        '2', '1'], 'Diamond' => ['K10', 'Q10', 'J10', '10', '9', '8',
-        '7', '6', '5', '3', '2', '1'] }.freeze
+DECK = { 'Hearts' => ['K10', 'Q10', 'J10', 10, 9, 8, 7,
+        6, 5, 3, 2, 1], 'Spades' => ['K10', 'Q10', 'J10',
+        10, 9, 8, 7, 6, 5, 3, 2, 1], 'Clubs' => 
+        ['K10', 'Q10', 'J10', 10, 9, 8, 7, 6, 5, 3,
+        2, 1], 'Diamond' => ['K10', 'Q10', 'J10', 10, 9, 8,
+        7, 6, 5, 3, 2, 1] }.freeze
 
 BLACKJACK = 21.freeze
 
@@ -29,11 +29,12 @@ def deal(player, str)
   end
 end
 
-def player_ace(card,player)
+def player_ace(card)
   prompt"You have an Ace"                   
   prompt"Is that an 11 or a 1?"
   answer = gets.chomp
     if answer == '1'
+    binding.pry
       return card = 1
     else
       return card = 11
@@ -42,7 +43,7 @@ end
 
 def ace_check(card, player)
   if card == '1' && player == 'player'
-    return player_ace(card, player)      
+    return player_ace(card)      
   elsif card == '1'                      
     if greater_than(11, add_hand(player))
       return card = 11
@@ -54,24 +55,24 @@ def ace_check(card, player)
   end
 end
 
-def remove(array)
-  x = array.delete_if { |word| word == /["Hearts""Spades""Clubs""Diamond"]/ }
-  x.to_s.split('').delete_if { |letter| letter == /[KQJ]/ }
-end
-
 def add_hand(array) 
-  new_array = array.flatten.remove(array).inject { |sum, num| sum + num }
-  return new_array
+  a = array.each{|word| word.is_a?(String) ? word.delete(word[0]) : word}
+  new_array = a.flatten.map{|num| num.to_i }
+  result = 0
+  new_array.each do |num|
+    result = num + result
+  end
+  result 
 end
  
 def winner_check(human, computer)
   case 
-  when (bigger(human, computer) && !Busted?(human)) || Busted?(computer)
-    return 8
-  when (bigger(computer,human) && !Busted?(computer)) || Busted?(human)
-    return 7
+  when (bigger(human, computer) && !busted?(human)) || busted?(computer)
+    return "win"
+  when (bigger(computer,human) && !busted?(computer)) || busted?(human)
+    return "computer won"
   else
-    return 6
+    return "tie"
   end
 end
 
@@ -81,7 +82,7 @@ def bigger(human, computer)
   end
 end
 
-def Busted?(hand)
+def busted?(hand)
   if add_hand(hand) > BLACKJACK
     return true
   end
@@ -101,7 +102,7 @@ loop do
   prompt"You have #{play_h[0]} and #{play_h[1]}"
 
   loop do
-    break if Busted?(play_h)
+    break if busted?(play_h)
       prompt"Stay or Hit?"
       answer = gets.chomp
     case answer.downcase
@@ -121,22 +122,22 @@ loop do
   prompt"Dealer has #{comp_h[0]} and #{comp_h[1]}"
 
   loop do
-    break if add_hand(comp_h) > 15 || Busted?
-      deal(comp_h, 'computer')
-    end
+    break if add_hand(comp_h) > 15 || busted?
+    deal(comp_h, 'computer')
+  end
   
   player_wins = 0
   computer_wins = 0
   
   prompt"You had #{play_h}, the Computer had #{comp_h}"
   case winner_check(play_h, comp_h)
-  when 8
+  when "win"
     prompt "You Won!"
     player_wins + 1
-  when 7
+  when "computer won"
     prompt "The Computer Won"
     computer_wins + 1
-  else 6
+  else "tie"
     prompt "You Both Busted"
   end
   

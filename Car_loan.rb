@@ -6,9 +6,11 @@ end
 def car_loan_monthly_ir(apr)
   apr_per_month = apr.to_f / 12.0
   apr_per_month.round(3)
+  payment = loan_amount/duration
 end
 
 loan_amount = ''
+
 loop do
   prompt('How much is your loan?')
   loan_amount = gets.chomp

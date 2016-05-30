@@ -24,12 +24,12 @@ def win?(player, computer)
 end
 
 def short_hand!(choice)
-  case choice.downcase
-  when 'r' || 'rock'
-    'rock'
-  when 'p' || 'paper'
-    'paper'
-  when 's' || 'scissors'
+  case choice
+  when 'r' || 'rock'            #I'm unsure of this code it is assigning
+    'rock'                      #'spock' to 'r' and 'rock'.  What's
+  when 'p' || 'paper'           #happening here?  I've used parentheses around the   
+    'paper'                     #boolean statements and rearranged the case function.
+  when 's' || 'scissors'        
     'scissors'
   when 'l' || 'lizard'
     'lizard'

@@ -1,0 +1,25 @@
+
+:en:
+  :language: 'What language would would you like English: en or French:fr ?'
+  :welcome: 'Welcome To The Calculator.  What's your name?:'
+  :valid_name: 'Make sure you enter a valid name?'
+  :first_number: 'What is your first number?'
+  :new_number: 'You need another number'
+  :second_number: 'What is your second number?'
+  :new_calc: 'Do you want to do another calculation? If so type Y'
+  :result: 'The result is ...'
+  :thank_you: 'Thank you for using the Calculator'
+  :good: 'This number looks good'
+  :unknown: 'Sorry I don't know that language, Sorry je ne sais pas ce language'
+
+:fr:
+  :welcome: 'Bienvenue à la calculatrice.  Comment t'appelles-tu?:'
+  :valid_name: 'Assurez-vous de qu'entrer un nom valide ?'
+  :first_number: 'Quel est votre premier numéro ?'
+  :new_number: 'Vous avez besoin d’un autre numéro'
+  :second_number: 'Quel est votre deuxième numéro ?'
+  :new_calc: 'Vous voulez faire un autre calcul ? Si oui, tapez o'
+  :result: 'Le résultat est...'
+  :thank_you: 'Merci d’utiliser la calculatrice'
+  :good: 'Ce nombre semble bon'
+  

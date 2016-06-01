@@ -1,7 +1,7 @@
 
 :en:
   :language: 'What language would would you like English: en or French:fr ?'
-  :welcome: 'Welcome To The Calculator.  What's your name?:'
+  :welcome: "Welcome To The Calculator.  What's your name?:"
   :valid_name: 'Make sure you enter a valid name?'
   :first_number: 'What is your first number?'
   :new_number: 'You need another number'
@@ -10,11 +10,11 @@
   :result: 'The result is ...'
   :thank_you: 'Thank you for using the Calculator'
   :good: 'This number looks good'
-  :unknown: 'Sorry I don't know that language, Sorry je ne sais pas ce language'
+  :unknown: "Sorry I don't know that language, Sorry je ne sais pas ce language"
 
 :fr:
-  :welcome: 'Bienvenue à la calculatrice.  Comment t'appelles-tu?:'
-  :valid_name: 'Assurez-vous de qu'entrer un nom valide ?'
+  :welcome: "Bienvenue à la calculatrice.  Comment t'appelles-tu?:"
+  :valid_name: "Assurez-vous de qu'entrer un nom valide ?"
   :first_number: 'Quel est votre premier numéro ?'
   :new_number: 'Vous avez besoin d’un autre numéro'
   :second_number: 'Quel est votre deuxième numéro ?'

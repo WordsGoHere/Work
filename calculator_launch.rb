@@ -8,7 +8,7 @@ require 'yaml'
 MESSAGES = YAML.load_file('calculator_messages.yml')  #I'm having trouble finding the keys
 CHOICES = %w(1 2 3 4)                                 #in the calculator_messages.yml
 
-LANG = set_language
+
 
 def operation_to_message(op)
   case op
@@ -115,7 +115,7 @@ def set_language
   end
   language
 end
-
+LANG = set_language
 prompt :welcome
 
 name = names
@@ -162,4 +162,3 @@ loop do
 end
 
 prompt :thank_you
-#test pull for local repository

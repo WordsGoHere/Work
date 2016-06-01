@@ -12,12 +12,12 @@
   :unknown: "Sorry I don't know that language, Sorry je ne sais pas ce language"
 
 :fr:
-  :welcome: "Bienvenue à la calculatrice.  Comment t'appelles-tu?:"
+  :welcome: "Bienvenue a la calculatrice.  Comment t'appelles-tu?:"
   :valid_name: "Assurez-vous de qu'entrer un nom valide ?"
-  :first_number: 'Quel est votre premier numéro ?'
-  :new_number: 'Vous avez besoin d’un autre numéro'
-  :second_number: 'Quel est votre deuxième numéro ?'
+  :first_number: 'Quel est votre premier numero ?'
+  :new_number: "Vous avez besoin d'un autre numero"
+  :second_number: 'Quel est votre deuxieme numero ?'
   :new_calc: 'Vous voulez faire un autre calcul ? Si oui, tapez o'
-  :result: 'Le résultat est...'
-  :thank_you: 'Merci d’utiliser la calculatrice'
+  :result: 'Le resultat est...'
+  :thank_you: "Merci d'utiliser la calculatrice"
   :good: 'Ce nombre semble bon'

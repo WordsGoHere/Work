@@ -5,31 +5,57 @@
 require 'pry'
 require 'yaml'
 
-MESSAGES = YAML.load_file('calculator_messages.yml')  #I'm having trouble finding the keys
-CHOICES = %w(1 2 3 4)                                 #in the calculator_messages.yml
+MESSAGES = YAML.load_file('calculator_messages.yml')
+CHOICES = %w(1 2 3 4).freeze
 
+def set_language
+  language = ''
+  loop do
+    p 'What language would would you like English: en or French:fr ?'
+    language = gets.chomp
+    break if language == 'en'
+    break if language == 'fr'
+    if language != 'en' || language != 'fr'
+      p 'Sorry I don\'t know that language, Sorry je ne sais pas ce language'
+    end
+  end
+  language.to_sym
+end
 
+LANGUAGE = set_language
 
 def operation_to_message(op)
-  case op
-  when '1'
-    'Adding'
-  when '2'
-    'Subtracting'
-  when '3'
-    'Multiplying'
-  when '4'
-    'Dividing'
+  if LANGUAGE == :en
+    case op
+    when '1'
+      'Adding'
+    when '2'
+      'Subtracting'
+    when '3'
+      'Multiplying'
+    when '4'
+      'Dividing'
+    end
+  else
+    case op
+    when '1'
+      'Ajouter'
+    when '2'
+      'Soustraire'
+    when '3'
+      'Multiplier'
+    when '4'
+      'Fracture'
+    end
   end
 end
 
-def prompt(key)
-  message = messages(key, LANGUAGE)
+def prompt(message)
   puts "=> #{message}"
 end
 
-def messages(message, lang = :en)
-  MESSAGES[lang][message]
+def messages(message)
+  p "=> #{MESSAGES[LANGUAGE][message]}"
 end
 
 def valid_number?(number)
@@ -38,50 +64,50 @@ end
 
 def number?(num)
   if num.is_a?(integer)
-    prompt :good
+    messages(:good)
   elsif num.is_a?(float)
-    prompt :good
+    messages(:good)
   else
-    prompt :new_number
+    messages(:new_number)
   end
 end
 
 def first_number
-  number1 = ""
+  number1 = ''
   loop do
-    prompt :first_number
+    messages(:first_number)
     number1 = gets.chomp
     if valid_number?(number1)
-      prompt :number1
+      messages(:number1)
       break
     else
-      prompt :new_number
+      messages(:new_number)
     end
   end
   number1
 end
 
 def second_number
-  number2 = ""
+  number2 = ''
   loop do
-    prompt :second_number
+    messages(:second_number)
     number2 = gets.chomp
     if valid_number?(number2)
-      prompt :number2
+      messages(:number2)
       break
     else
-      prompt :new_number
+      messages(:new_number)
     end
   end
   number2
 end
 
 def names
-  name = ""
+  name = ''
   loop do
     name = gets.chomp
     if name.empty?
-      prompt :valid_name
+      messages(:valid_name)
     else
       break
     end
@@ -90,33 +116,19 @@ def names
 end
 
 def functions
-  function = ""
+  function = ''
   loop do
     function = gets.chomp
     if CHOICES
       break
     else
-      prompt :new_number
+      messages(:new_number)
     end
   end
   function
 end
 
-def set_language
-  language = ''
-  loop do
-    prompt :language
-    language = gets.chomp
-    break if language == 'en'
-    break if language == 'fr'
-    if language != 'en' || language != 'fr'
-      prompt :unknown
-    end
-  end
-  language
-end
-LANG = set_language
-prompt :welcome
+messages(:welcome)
 
 name = names
 
@@ -132,10 +144,21 @@ loop do
   4) divide
    QQQ
 
-  prompt(function_prompt)
+  language_function_prompt = <<-QQC
+  Qu'est-ce que tu aimerais faire?
+  1 ) ajouter
+  2 ) soustraire
+  3 ) multiplier
+  4 ) fracture
+    QQC
+
+  if LANGUAGE == :en
+    prompt(function_prompt)
+  else
+    prompt(language_function_prompt)
+  end
 
   function = functions
-
   prompt("#{operation_to_message(function)} now ...")
 
   sleep 1
@@ -152,13 +175,13 @@ loop do
     result = number1.to_f / number2.to_f
   end
 
-  prompt :result
-  prompt "#{result}"
+  messages(:result)
+  prompt result.to_s
 
-  prompt :new_calc
+  messages(:new_calc)
   answer = gets.chomp
 
   break unless answer.downcase.start_with?('y')
 end
 
-prompt :thank_you
+messages(:thank_you)

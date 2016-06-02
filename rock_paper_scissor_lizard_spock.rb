@@ -33,10 +33,8 @@ def short_hand!(choice)
     'scissors'
   when 'l'
     'lizard'
-  when 'sp'
+  when'sp'
     'spock'
-  else
-    false
   end
 end
 
@@ -61,7 +59,7 @@ loop do
   computer_choice = VALID_CHOICES.sample
   prompt "You chose: #{choice} , Computer chose: #{computer_choice}"
 
-  case win?(short_hand!(choice), computer_choice)
+  case win?(choice, computer_choice)
   when 'player win'
     prompt 'You won this round'
     player_wins += 1

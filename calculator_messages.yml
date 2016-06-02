@@ -10,7 +10,11 @@
   :thank_you: 'Thank you for using the Calculator'
   :good: 'This number looks good'
   :unknown: "Sorry I don't know that language, Sorry je ne sais pas ce language"
-
+  :add: 'Adding'
+  :subtract: 'Subtracting'
+  :multiply: 'Multiplying'
+  :divide: 'Dividing'
+  
 :fr:
   :welcome: "Bienvenue a la calculatrice.  Comment t'appelles-tu?:"
   :valid_name: "Assurez-vous de qu'entrer un nom valide ?"
@@ -21,3 +25,7 @@
   :result: 'Le resultat est...'
   :thank_you: "Merci d'utiliser la calculatrice"
   :good: 'Ce nombre semble bon'
+  :add: 'Ajouter'
+  :subtract: 'Soustraire'
+  :multiply: 'Multiplier'
+  :divide: 'Fracture'

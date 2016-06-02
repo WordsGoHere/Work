@@ -25,28 +25,15 @@ end
 LANGUAGE = set_language
 
 def operation_to_message(op)
-  if LANGUAGE == :en
-    case op
-    when '1'
-      'Adding'
-    when '2'
-      'Subtracting'
-    when '3'
-      'Multiplying'
-    when '4'
-      'Dividing'
-    end
-  else
-    case op
-    when '1'
-      'Ajouter'
-    when '2'
-      'Soustraire'
-    when '3'
-      'Multiplier'
-    when '4'
-      'Fracture'
-    end
+  case op
+  when '1'
+    messages(:add)
+  when '2'
+    messages(:subtract)
+  when '3'
+    messages(:multiply)
+  when '4'
+    messages(:divide)
   end
 end
 
@@ -78,7 +65,6 @@ def first_number
     messages(:first_number)
     number1 = gets.chomp
     if valid_number?(number1)
-      messages(:number1)
       break
     else
       messages(:new_number)
@@ -93,7 +79,6 @@ def second_number
     messages(:second_number)
     number2 = gets.chomp
     if valid_number?(number2)
-      messages(:number2)
       break
     else
       messages(:new_number)
@@ -112,7 +97,6 @@ def names
       break
     end
   end
-  name
 end
 
 def functions
@@ -146,10 +130,10 @@ loop do
 
   language_function_prompt = <<-QQC
   Qu'est-ce que tu aimerais faire?
-  1 ) ajouter
-  2 ) soustraire
-  3 ) multiplier
-  4 ) fracture
+  1) ajouter
+  2) soustraire
+  3) multiplier
+  4) fracture
     QQC
 
   if LANGUAGE == :en
@@ -159,7 +143,7 @@ loop do
   end
 
   function = functions
-  prompt("#{operation_to_message(function)} now ...")
+  operation_to_message(function)
 
   sleep 1
 

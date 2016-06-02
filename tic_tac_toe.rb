@@ -1,17 +1,18 @@
+require 'pry'
 INITIAL_MARKER = ' '.freeze
 PLAYER_MARKER = 'X'.freeze
 COMPUTER_MARKER = 'O'.freeze
 WINNING_LINES =   [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
-                  [[1, 5, 9], [3, 5, 9]]
+                  [[1, 5, 9], [3, 5, 7]]
 
 def prompt(message)
   puts " => #{message}"
 end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
-def display_board(brd)
-  puts "You're a #{PLAYER_MARKER}. Computer is a #{COMPUTER_MARKER}"
+def display_board(brd, player, computer)
+  puts "You're a #{player}. Computer is a #{computer}"
   system 'cls'
   puts "     |     |"
   puts "     |     |"
@@ -48,7 +49,7 @@ def joinor(array, comma = ',', word = ' or')
   array.join(comma)
 end
 
-def player_places_piece(board)
+def player_places_piece(board, player)
   square = ''
   loop do
     prompt"Choose a square #{joinor(empty_squares(board))}"
@@ -59,93 +60,124 @@ def player_places_piece(board)
       prompt"Between 1-9."
     end
   end
+  if player == "X"
   board[square] = PLAYER_MARKER
+  else 
+  board[square] = COMPUTER_MARKER
+  end
 end
 
 def board_full(board)
   empty_squares(board).empty?
 end
 
-def someone_won(board)
+def someone_won(board, player)
   WINNING_LINES.each do |line|
-    if winnin_lines(board, line, PLAYER_MARKER) == 3
-      'Player'
-    elsif winnin_lines(board, line, COMPUTER_MARKER) == 3
-      'Computer'
+    if (board.values_at(*line).count(PLAYER_MARKER) == 3) && (player == 'X')
+      return 'Player'
+    elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'O')
+      return 'Player'
+    elsif (board.values_at(*line).count(PLAYER_MARKER) == 3) && (player == 'O')
+      return 'Computer'
+    elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'X')
+      return 'Computer'
     else
-      false
     end
   end
 end
 
-def detect_winner(board)
-  !!detect_winner(board)
-end
-
-def winnin_lines(board, *line, marker)
-  board.values_at(*line).count(marker)
-end
-
-def computer_places_piece(board)
-  square = nil
+def computer_places_piece(board, player)
+  square = 0
   if board[5] == ' '
-    square = 5
-  else
+    computer_marker(board, 5, player)
+  elsif
     WINNING_LINES.each do |line|
-      if winnin_lines(board, line, COMPUTER_MARKER) == 2
-        square = line.index_at(' ')
-      elsif winnin_lines(board, line, PLAYER_MARKER) == 2
-        square = line.index_at(' ')
-      else
-        square = empty_squares(board).sample
+      if board.values_at(*line).count(COMPUTER_MARKER) == 2 && board.values_at(*line).include?(' ')
+        if board[line[0]] == ' '
+          return computer_marker(board,line[0],player)
+        elsif board[line[1]] == ' '
+          return computer_marker(board,line[1],player)
+        else
+          return computer_marker(board,line[2],player)
+        end
+      elsif board.values_at(*line).count(PLAYER_MARKER) == 2  && board.values_at(*line).include?(' ')
+        if board[line[0]] == ' '
+          return computer_marker(board,line[0],player)
+        elsif board[line[1]] == ' '
+          return computer_marker(board,line[1],player)
+        else
+          return computer_marker(board,line[2],player)
+        end
       end
     end
+  else 
+    square = empty_squares(board).sample
   end
-  board[square] = COMPUTER_MARKER
 end
 
-def place_peice(board, player)
-  if player == 'x'
-    player_places_piece(board)
-    computer_places_piece(board)
+def computer_marker(board,square,player)
+  if player == 'X'
+    board[square] = COMPUTER_MARKER
+  else 
+    board[square] = PLAYER_MARKER
+  end
+end
+
+def place_peice(board, player, computer)
+  if player == 'X'
+    player_places_piece(board, player)
+      if someone_won(board, player) == 'Player' || board_full(board)
+        return
+      end
+    computer_places_piece(board, player)
   else
-    computer_places_piece(board)
-    player_places_piece(board)
+    computer_places_piece(board, player)
+    display_board(board, player, computer)
+      if someone_won(board, player) == 'Computer' || board_full(board)
+        return
+      end
+    player_places_piece(board, player)
   end
 end
 
 def pick_player
   puts "Hello who would you like to play as? 'X' or 'O'"
-  player = ''
+  answer = ''
   loop do
     answer = gets.chomp
-    case answer
-    when 'X'
-      player = 'x'
+    if answer == 'X'
+      'X'
       break
-    when 'O'
-      player = 'o'
+    elsif answer == 'O'
+      'O'
       break
     else
       prompt "Try Again"
     end
   end
+  answer
 end
+
+player_wins = 0
+computer_wins = 0
 
 loop do
   board = initialize_board
   player = pick_player
+  computer = player == 'X' ? 'O' : 'X' 
 
   loop do
-    display_board(board)
-    place_peice(board, player)
-    break if someone_won(board) || board_full(board)
-  end
-
-  if someone_won(board) == 'Player' || someone_won(board) == 'Computer'
-    prompt"Congratulations #{someone_won(board)}!"
-  else
-    prompt"It's a Tie!"
+    display_board(board, player, computer)
+    place_peice(board, player, computer)
+    if someone_won(board, player) == 'Player' 
+      prompt"Congratulations #{someone_won(board, player)}!"
+      player_wins += 1
+    elsif someone_won(board, player) == 'Computer'
+      prompt"Congratulations #{someone_won(board, player)}!"
+      computer_wins += 1
+    else board_full(board)
+      prompt"It's a Tie!"
+    end
   end
 
   prompt"Play Again (y or n)"

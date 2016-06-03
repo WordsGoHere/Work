@@ -44,9 +44,9 @@ def empty_squares(board)
   board.keys.select { |num| board[num] == INITIAL_MARKER }
 end
 
-def joinor(array, comma = ',', word = ' or')
-  array[-1] = "#{word} #{array.last}" if array.size > 1
-  array.join(comma)
+def joinor(picks_array, comma = ',', word = ' or')
+  picks_array[-1] = "#{word} #{picks_array.last}" if picks_array.length > 1
+  picks_array.join(comma)
 end
 
 def player_places_piece(board, player)
@@ -71,8 +71,9 @@ def board_full(board)
   empty_squares(board).empty?
 end
 
-def someone_won(board, player)
+def someone(board, player)
   WINNING_LINES.each do |line|
+  binding.pry
     if (board.values_at(*line).count(PLAYER_MARKER) == 3) && (player == 'X')
       return 'Player'
     elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'O')
@@ -81,8 +82,9 @@ def someone_won(board, player)
       return 'Computer'
     elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'X')
       return 'Computer'
-    else
+    elsif board_full(board)
       return 'tie'
+    else
     end
   end
 end
@@ -127,15 +129,15 @@ end
 def place_peice(board, player, computer)
   if player == 'X'
     player_places_piece(board, player)
-      if someone_won(board, player) == 'Player' || board_full(board)
+      if someone(board, player) == 'Player' || board_full(board)
         return
       end
     computer_places_piece(board, player)
-    binding.pry
+    display_board(board, player, computer)
   else
     computer_places_piece(board, player)
     display_board(board, player, computer)
-      if someone_won(board, player) == 'Computer' || board_full(board)
+      if someone(board, player) == 'Computer' || board_full(board)
         return
       end
     player_places_piece(board, player)
@@ -171,19 +173,19 @@ loop do
   loop do
     display_board(board, player, computer)
     place_peice(board, player, computer)
-    binding.pry
-    if someone_won(board, player) == 'Player' 
-      prompt"Congratulations #{someone_won(board, player)}!"
+    if someone(board, player) == 'Player' 
+      prompt"Congratulations #{someone(board, player)}!"
       player_wins += 1
       break
-    elsif someone_won(board, player) == 'Computer'
-      prompt"Congratulations #{someone_won(board, player)}!"
+    elsif someone(board, player) == 'Computer'
+      prompt"Congratulations #{someone(board, player)}!"
       computer_wins += 1
       break
-    else (board_full(board)) && (someone_won(board,player) == 'tie')
-    binding.pry
+    elsif board_full(board) && someone(board,player) == 'tie'
       prompt"It's a Tie!"
       break
+    else
+      next
     end
   end
 

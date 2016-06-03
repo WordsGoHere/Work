@@ -4,7 +4,7 @@ PLAYER_MARKER = 'X'.freeze
 COMPUTER_MARKER = 'O'.freeze
 WINNING_LINES =   [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
-                  [[1, 5, 9], [3, 5, 7]]
+                  [[1, 5, 9], [3, 5, 7]].freeze
 
 def prompt(message)
   puts " => #{message}"
@@ -12,8 +12,8 @@ end
 
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(brd, player, computer)
-  puts "You're a #{player}. Computer is a #{computer}"
   system 'cls'
+  puts "You're a #{player}. Computer is a #{computer}"
   puts "     |     |"
   puts "     |     |"
   puts "  #{brd[1]}  |  #{brd[2]}  |  #{brd[3]}"
@@ -82,6 +82,7 @@ def someone_won(board, player)
     elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'X')
       return 'Computer'
     else
+      return 'tie'
     end
   end
 end
@@ -130,6 +131,7 @@ def place_peice(board, player, computer)
         return
       end
     computer_places_piece(board, player)
+    binding.pry
   else
     computer_places_piece(board, player)
     display_board(board, player, computer)
@@ -169,14 +171,19 @@ loop do
   loop do
     display_board(board, player, computer)
     place_peice(board, player, computer)
+    binding.pry
     if someone_won(board, player) == 'Player' 
       prompt"Congratulations #{someone_won(board, player)}!"
       player_wins += 1
+      break
     elsif someone_won(board, player) == 'Computer'
       prompt"Congratulations #{someone_won(board, player)}!"
       computer_wins += 1
-    else board_full(board)
+      break
+    else (board_full(board)) && (someone_won(board,player) == 'tie')
+    binding.pry
       prompt"It's a Tie!"
+      break
     end
   end
 

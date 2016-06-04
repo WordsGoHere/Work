@@ -1,7 +1,7 @@
 require 'pry'
 INITIAL_MARKER = ' '.freeze
-PLAYER_MARKER = 'X'.freeze
-COMPUTER_MARKER = 'O'.freeze
+MARKER_X = 'X'.freeze
+MARKER_O = 'O'.freeze
 WINNING_LINES =   [[1, 2, 3], [4, 5, 6], [7, 8, 9]] +
                   [[1, 4, 7], [2, 5, 8], [3, 6, 9]] +
                   [[1, 5, 9], [3, 5, 7]].freeze
@@ -61,9 +61,9 @@ def player_places_piece(board, player)
     end
   end
   if player == "X"
-  board[square] = PLAYER_MARKER
+  board[square] = MARKER_X
   else 
-  board[square] = COMPUTER_MARKER
+  board[square] = MARKER_O
   end
 end
 
@@ -71,16 +71,17 @@ def board_full(board)
   empty_squares(board).empty?
 end
 
+#Counts the number of MARKERS in the arrays of the WINNING_LINES constant
+#and reports back if any of the arrays are full of MARKER_X or _O.
 def someone(board, player)
   WINNING_LINES.each do |line|
-  binding.pry
-    if (board.values_at(*line).count(PLAYER_MARKER) == 3) && (player == 'X')
+    if (board.values_at(*line).count(MARKER_X) == 3) && (player == 'X')
       return 'Player'
-    elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'O')
+    elsif (board.values_at(*line).count(MARKER_O) == 3) && (player == 'O')
       return 'Player'
-    elsif (board.values_at(*line).count(PLAYER_MARKER) == 3) && (player == 'O')
+    elsif (board.values_at(*line).count(MARKER_X) == 3) && (player == 'O')
       return 'Computer'
-    elsif (board.values_at(*line).count(COMPUTER_MARKER) == 3) && (player == 'X')
+    elsif (board.values_at(*line).count(MARKER_O) == 3) && (player == 'X')
       return 'Computer'
     elsif board_full(board)
       return 'tie'
@@ -89,53 +90,48 @@ def someone(board, player)
   end
 end
 
-def computer_places_piece(board, player)
+#This method determines where a computer places a peice.  If there are
+#two places occupied by the same MARKER in an array in the WINNING_LINES
+#constant it will place a MARKER_X or _O in the open space in that array.
+def computer_places_piece(board, player, computer)
   square = 0
   if board[5] == ' '
-    computer_marker(board, 5, player)
-  elsif
+    board[5] = computer
+  end
     WINNING_LINES.each do |line|
-      if board.values_at(*line).count(COMPUTER_MARKER) == 2 && board.values_at(*line).include?(' ')
+      if board.values_at(*line).count(computer) == 2 && board.values_at(*line).include?(' ')
         if board[line[0]] == ' '
-          return computer_marker(board,line[0],player)
+          return board[line[0]] = computer
         elsif board[line[1]] == ' '
-          return computer_marker(board,line[1],player)
+          return board[line[1]] = computer
         else
-          return computer_marker(board,line[2],player)
+          return board[line[2]] = computer
         end
-      elsif board.values_at(*line).count(PLAYER_MARKER) == 2  && board.values_at(*line).include?(' ')
+      elsif board.values_at(*line).count(player) == 2  && board.values_at(*line).include?(' ')
         if board[line[0]] == ' '
-          return computer_marker(board,line[0],player)
+          return board[line[0]] = computer
         elsif board[line[1]] == ' '
-          return computer_marker(board,line[1],player)
+          return board[line[1]] = computer
         else
-          return computer_marker(board,line[2],player)
+          return board[line[2]] = computer
         end
       end
     end
-  else 
-    square = empty_squares(board).sample
-  end
+  square = empty_squares(board).sample
 end
 
-def computer_marker(board,square,player)
-  if player == 'X'
-    board[square] = COMPUTER_MARKER
-  else 
-    board[square] = PLAYER_MARKER
-  end
-end
-
+#This method places pieces on the board the statements
+#inside are to determine which piece is placed first.
 def place_peice(board, player, computer)
   if player == 'X'
     player_places_piece(board, player)
       if someone(board, player) == 'Player' || board_full(board)
         return
       end
-    computer_places_piece(board, player)
+    computer_places_piece(board, player, computer)
     display_board(board, player, computer)
   else
-    computer_places_piece(board, player)
+    computer_places_piece(board, player, computer)
     display_board(board, player, computer)
       if someone(board, player) == 'Computer' || board_full(board)
         return

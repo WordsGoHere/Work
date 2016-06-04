@@ -122,7 +122,7 @@ end
 
 #This method places pieces on the board the statements
 #inside are to determine which piece is placed first.
-def place_peice(board, player, computer)
+def place_piece(board, player, computer)
   if player == 'X'
     player_places_piece(board, player)
       if someone(board, player) == 'Player' || board_full(board)
@@ -168,7 +168,7 @@ loop do
 
   loop do
     display_board(board, player, computer)
-    place_peice(board, player, computer)
+    place_piece(board, player, computer)
     if someone(board, player) == 'Player' 
       prompt"Congratulations #{someone(board, player)}!"
       player_wins += 1

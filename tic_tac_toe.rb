@@ -13,6 +13,7 @@ end
 # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
 def display_board(brd, player, computer)
   system 'cls'
+  system 'clear'
   puts "You're a #{player}. Computer is a #{computer}"
   puts "     |     |"
   puts "     |     |"
@@ -97,7 +98,7 @@ def computer_places_piece(board, player, computer)
   square = 0
   if board[5] == ' '
     board[5] = computer
-  end
+  else
     WINNING_LINES.each do |line|
       if board.values_at(*line).count(computer) == 2 && board.values_at(*line).include?(' ')
         if board[line[0]] == ' '
@@ -115,9 +116,11 @@ def computer_places_piece(board, player, computer)
         else
           return board[line[2]] = computer
         end
+      else
+        square = empty_squares(board).sample
       end
     end
-  square = empty_squares(board).sample
+  end
 end
 
 #This method places pieces on the board the statements
@@ -164,7 +167,7 @@ computer_wins = 0
 loop do
   board = initialize_board
   player = pick_player
-  computer = player == 'X' ? 'O' : 'X' 
+  computer = (player == 'X' ? 'O' : 'X') 
 
   loop do
     display_board(board, player, computer)

@@ -39,6 +39,7 @@ loop do
 end
 
 duration = ''
+mnth_yr = ''
 loop do
   prompt('How long is your loan?')
   duration = gets.chomp

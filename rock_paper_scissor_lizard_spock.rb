@@ -78,6 +78,9 @@ loop do
     next
   end
 
+  player_wins = 0
+  computer_wins = 0
+  
   prompt 'Do you want to play again?'
   answer = gets.chomp
   break unless answer.downcase.start_with?('y')

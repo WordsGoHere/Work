@@ -56,13 +56,14 @@ def ace_check(card, player)
 end
 
 def add_hand(array)
-  facecards_to_numbers = array.map { |pair| pair.include?(FACECARDS)? pair[0] == 10 : return }
+  facecards_to_numbers = array.flatten.map { |card| FACECARDS.include?(card) ? card == 10 : card }
   hand_total = 0
   facecards_to_numbers.each do |num| 
-    hand_total += num[0]
+    if num.is_a?(Integer)
+      hand_total += num[0]
+    end
   end
   hand_total
-  binding.pry
 end
  
 def winner_check(human, computer)
@@ -106,11 +107,9 @@ loop do
   prompt"The computer has #{comp_h} showing."
   
   loop do
-    if busted?(play_h)
+    break if busted?(play_h)
       prompt"Stay or Hit?"
       answer = gets.chomp
-      break
-    end
     case answer.downcase
     when 'hit'
       deal(play_h, 'player', deck)
